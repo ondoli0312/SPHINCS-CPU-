@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
+    <ClCompile Include="SHA-256.c" />
     <ClCompile Include="sign.c" />
   </ItemGroup>
   <ItemGroup>
