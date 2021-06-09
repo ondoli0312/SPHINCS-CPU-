@@ -1,8 +1,6 @@
 #include "type.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include "SHA-256.h"
+
 
 
 /**
@@ -19,7 +17,21 @@ int randombytes(OUT u8* result, IN u64 xLen)
 	return SUCCESS;
 }
 
+int generateKey_TreeHash(u8* output, const u8* sk_seed, const u8* pk_seed, 
+	u32 leaf_index, u32 idx_offset, u32* tree_addr)
+{
+	u8 stack[(SUBTREE_H + 1) * DIGEST];
+	u8 heights[(1 << SUBTREE_H) + 1];
+	u32 offset = 0;
+	u32 idx = 0;
+	u32 tree_idx = 0;
 
+	for (idx = 0; idx < (u32)(1 << SUBTREE_H); idx++) {
+
+	}
+
+
+}
 
 /**
 * @brief	seed를 통한 공개 키/개인 키 생성
@@ -39,7 +51,7 @@ int generate_Key(OUT u8* pubkey, OUT u8* prikey)
 	memcpy(pubkey, SEED + (2 * DIGEST), DIGEST);
 
 	//해시 값 초기화(추후에 사용할 값을 미리 초기화하여 중복적으로 사용)
-	
+	init_Hash_func(pubkey);
 
 	return SUCCESS;
 }
