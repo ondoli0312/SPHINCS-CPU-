@@ -32,6 +32,15 @@ u32 state_seed[10];
 #define WE1(x)				(ROTR(x,  17) ^ ROTR(x, 19) ^ Sf(x, 10))
 #define BS0(x)				((ROTR(x,  2)) ^ ROTR(x, 13) ^ ROTR(x,  22))
 #define BS1(x)				(ROTR(x,  6) ^ ROTR(x, 11) ^ ROTR(x,  25))
+#define BLOCKBYTE 64
+typedef struct
+{
+	u32 hash[8];
+	u32 byte_msglen;
+	u8 buf[BLOCKBYTE];
+}SHA256_INFO;
+void OP_SHA256(IN const u8* pt, IN unsigned long long byte_msglen, OUT u8* hash_value);
+void SHA256_inc_final(u8* output, u32* state, u8* in, u64 xLen);
 
 //SPHINCS+ section
 #define LAYER	(17)		//SUBTREE LAYER
@@ -48,6 +57,15 @@ u32 state_seed[10];
 #define WOTS_BYTE (WOTS_LEN * DIGEST)
 #define WOTS_PK_BYTE (WOTS_BYTE)
 
+int wots_gen_leaf(u8* leaf, u8* sk_seed, u8* pk_seed, u32 addr_idx, u32 Tree_addr[8]);
+void tHash(u8* out, u8* in, u32 inblocks, u8* pk_seed, u32* addr);
+void wots_gen_sk(u8* sk, u8* sk_seed, u32* wots_addr);
+void chain(u8* out, u8* in, u32 startPoint, u32 steps, u8* pk_seed, u32* addr);
+
+//Sign Section
+int generateKey_TreeHash(u8* output, const u8* sk_seed, const u8* pk_seed,
+	u32 leaf_index, u32 idx_offset, u32* tree_addr);
+
 //FORS section
 #define FORS_PK	(DIGEST)
 #define FORS_MSG 
@@ -58,3 +76,6 @@ void set_keypair_addr(u32 addr[8], u32 keypair);
 void copy_subtree_addr(u32 out[8], const u32 in[8]);
 void copy_keypair_addr(u32 out[8], const u32 in[8]);
 void set_chain_addr(u32 addr[8], u32 chain);
+void set_hash_addr(u32 addr[8], u32 hash);
+void set_tree_index(u32 addr[8], u32 tree_index);
+void set_tree_height(u32 addr[8], u32 tree_height);

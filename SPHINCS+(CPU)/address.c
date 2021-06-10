@@ -33,3 +33,27 @@ void set_chain_addr(u32 addr[8], u32 chain)
 {
     ((unsigned char*)addr)[17] = chain;
 }
+
+void set_hash_addr(u32 addr[8], u32 hash)
+{
+    ((unsigned char*)addr)[21] = hash;
+}
+
+void set_tree_height(u32 addr[8], u32 tree_height)
+{
+    ((unsigned char*)addr)[17] = tree_height;
+}
+
+void u32_to_bytes(unsigned char* out, u32 in)
+{
+    out[0] = (unsigned char)(in >> 24);
+    out[1] = (unsigned char)(in >> 16);
+    out[2] = (unsigned char)(in >> 8);
+    out[3] = (unsigned char)in;
+}
+
+void set_tree_index(u32 addr[8], u32 tree_index)
+{
+    u32_to_bytes(&((unsigned char*)addr)[18], tree_index);
+}
+
