@@ -1,8 +1,6 @@
 #include "type.h"
 #include "SHA-256.h"
 
-
-
 /**
 * @brief      랜덤 값 생성
 * @param      result			출력 저장 배열
@@ -12,7 +10,7 @@
 int randombytes(OUT u8* result, IN u64 xLen)
 {
 	for (int i = 0; i < xLen; i++) {
-		result[i] = rand() % 0x100;
+		result[i] = i ;
 	}
 	return SUCCESS;
 }
@@ -27,12 +25,13 @@ int generateKey_TreeHash(u8* output, const u8* sk_seed, const u8* pk_seed,
 	u32 tree_idx = 0;
 
 	for (idx = 0; idx < (u32)(1 << SUBTREE_H); idx++) {
-		wots_gen_leaf(stack + offset * DIGEST, sk_seed, pk_seed, idx + idx_offset, tree_addr);
+		wots_gen_leaf(stack + (offset * DIGEST), sk_seed, pk_seed, idx + idx_offset, tree_addr);
 		offset += 1;
 		heights[offset - 1] = 0;
-		while (offset >= 2 && (heights[offset - 1] == heights[offset - 2])) {
-			tree_idx = (idx >> (heights[offset - 1] + 1));
 
+		while (offset >= 2 && (heights[offset - 1] == heights[offset - 2])) 
+		{
+			tree_idx = (idx >> (heights[offset - 1] + 1));
 			set_tree_height(tree_addr, heights[offset - 1] + 1);
 			set_tree_index(tree_addr, tree_idx + (idx_offset >> (heights[offset - 1] + 1))); 
 			tHash(stack + (offset - 2) * DIGEST, stack + (offset - 2) * DIGEST, 2, pk_seed, tree_addr);
@@ -56,15 +55,24 @@ int generateKey_TreeHash(u8* output, const u8* sk_seed, const u8* pk_seed,
 int generate_Key(OUT u8* pk, OUT u8* sk)
 {
 	u8 SEED[SEED_BYTE];
-	u32 top_tree_addr[8];
+	u32 top_tree_addr[8] = { 0, };
 	randombytes(SEED, SEED_BYTE);
+
+	set_layer_addr(top_tree_addr, LAYER -1);
+	set_type(top_tree_addr, 2);
+
 
 	//생성된 SEED를 바탕으로 키를 초기화
 	memcpy(sk, SEED, SEED_BYTE);
 	memcpy(pk, SEED + (2 * DIGEST), DIGEST);
-
+	
 	//해시 값 초기화(추후에 사용할 값을 미리 초기화하여 중복적으로 사용)
 	init_Hash_func(pk);
+
+	for (int i = 0; i < 10; i++)
+		printf("%08X ", state_seed[i]);
+	printf("\n");
+
 	generateKey_TreeHash(sk + 3 * DIGEST, sk, sk + 2 * DIGEST, 0, 0, top_tree_addr);
 	memcpy(pk + DIGEST, sk + 3 * DIGEST, DIGEST);
 	return SUCCESS;

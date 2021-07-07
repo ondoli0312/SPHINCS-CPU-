@@ -65,6 +65,8 @@ void chain(u8* out, u8* in, u32 startPoint, u32 steps, u8* pk_seed, u32* addr);
 //Sign Section
 int generateKey_TreeHash(u8* output, const u8* sk_seed, const u8* pk_seed,
 	u32 leaf_index, u32 idx_offset, u32* tree_addr);
+int randombytes(OUT u8* result, IN u64 xLen);
+int generate_Key(OUT u8* pk, OUT u8* sk);
 
 //FORS section
 #define FORS_PK	(DIGEST)
@@ -79,3 +81,4 @@ void set_chain_addr(u32 addr[8], u32 chain);
 void set_hash_addr(u32 addr[8], u32 hash);
 void set_tree_index(u32 addr[8], u32 tree_index);
 void set_tree_height(u32 addr[8], u32 tree_height);
+void set_layer_addr(u32 addr[8], u32 layer);

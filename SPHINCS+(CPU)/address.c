@@ -12,8 +12,15 @@ void set_keypair_addr(u32 addr[8], u32 keypair)
     /* which one, we'd need to express it in two bytes */
     ((unsigned char*)addr)[12] = keypair >> 8;
 #endif
+
     ((unsigned char*)addr)[13] = keypair;
 }
+
+void set_layer_addr(u32 addr[8], u32 layer)
+{
+    ((unsigned char*)addr)[0] = layer;
+}
+
 
 void copy_subtree_addr(u32 out[8], const u32 in[8])
 {

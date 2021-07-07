@@ -20,13 +20,13 @@ void tHash(u8* out, u8* in, u32 inblocks, u8* pk_seed,  u32* addr){
 	u8* buffer = (u8*)malloc(22 + (DIGEST * inblocks));
 	if (buffer == NULL)
 		return;
-	u8* output[DIGEST];
+	u8 output[DIGEST];
 	u8 sha2_state[40];
 
 	memcpy(sha2_state, state_seed, 40 * sizeof(u8));
 	memcpy(buffer, addr, 22 * sizeof(u8));
 	memcpy(buffer + 22, in, inblocks * DIGEST);
-	SHA256_inc_final(output, sha2_state, in, 22 + (DIGEST * inblocks));
+	SHA256_inc_final(output, sha2_state, buffer, 22 + (DIGEST * inblocks));
 	memcpy(out, output, DIGEST);
 	free(buffer);
 }
@@ -52,9 +52,9 @@ void wots_gen_pk(u8* pk, u8* sk_seed, u8* pk_seed, u32 addr[8]){
 
 int wots_gen_leaf(u8* leaf, u8* sk_seed, u8* pk_seed, u32 addr_idx, u32 Tree_addr[8])
 {
-	u8 pk_buf[WOTS_BYTE];
-	u32 wots_addr[8];
-	u32 wots_pk_addr[8];
+	u8 pk_buf[WOTS_BYTE] = {0,};
+	u32 wots_addr[8] = { 0, };
+	u32 wots_pk_addr[8] = { 0, };
 
 	set_type(wots_addr, 0);
 	set_type(wots_pk_addr, 1);
